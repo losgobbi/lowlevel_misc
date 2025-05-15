@@ -1,0 +1,23 @@
+diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefile
+index c1252e2b779e..c8f78a302f46 100644
+--- a/drivers/i2c/busses/Makefile
++++ b/drivers/i2c/busses/Makefile
+@@ -159,4 +159,6 @@ obj-$(CONFIG_SCx200_ACB)	+= scx200_acb.o
+ obj-$(CONFIG_I2C_FSI)		+= i2c-fsi.o
+ obj-$(CONFIG_I2C_VIRTIO)	+= i2c-virtio.o
+ 
++obj-y	+= i2c-dummy-master.o
++
+ ccflags-$(CONFIG_I2C_DEBUG_BUS) := -DDEBUG
+diff --git a/drivers/iio/magnetometer/Makefile b/drivers/iio/magnetometer/Makefile
+index 9297723a97d8..5e1b0cf5a0dc 100644
+--- a/drivers/iio/magnetometer/Makefile
++++ b/drivers/iio/magnetometer/Makefile
+@@ -13,6 +13,7 @@ obj-$(CONFIG_BMC150_MAGN_I2C) += bmc150_magn_i2c.o
+ obj-$(CONFIG_BMC150_MAGN_SPI) += bmc150_magn_spi.o
+ 
+ obj-$(CONFIG_MAG3110)	+= mag3110.o
++obj-y	+= dummy-driver.o
+ obj-$(CONFIG_HID_SENSOR_MAGNETOMETER_3D) += hid-sensor-magn-3d.o
+ obj-$(CONFIG_MMC35240)	+= mmc35240.o
+ 

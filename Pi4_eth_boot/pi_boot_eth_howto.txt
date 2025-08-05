@@ -1,0 +1,48 @@
+### saving steps for booting from eth
+
+# need to update firmware to get the latest changes before this.
+# if it is up-to-date, should see the bits for network enabled
+# 0xf21 : sdcard->network->usb->retry
+BOOT_ORDER=0xf21
+
+# if fw is ok, it will try to ask for an IP from DHCP...
+
+# ... we can use dnsmasq, so at /etc/dnsmasq.conf:
+interface=enx*
+bind-interfaces
+dhcp-range=192.168.0.100,192.168.0.200,12h
+enable-tftp
+tftp-root=/srv/tftp
+log-queries
+log-dhcp
+pxe-service=0,"Raspberry Pi Boot"
+port=0
+
+# tftp folder at... /srv/tftp/<piserial>/
+/srv/tftp/3efe4677/
+
+#...files under that folder with permissions like:
+dnsmasq nogroup <file>
+
+# Export path for NFS at /etc/exports file, entry like:
+/srv/nfs/rpi *(rw,sync,no_subtree_check,no_root_squash)
+
+# pi cmdline
+# 192.168.0.10 is the host pc serving files and rootfs
+dwc_otg.lpm_enable=0 console=serial0,115200 console=tty1 root=/dev/nfs nfsroot=192.168.0.10:/srv/nfs/rpi,nfsvers=3 rw ip=dhcp rootwait
+
+# rootfs will be fetched from network over an pc host path configured from cmdline, /srv/nfs/rpi in this case
+/srv/nfs/rpi/<rootfs>
+
+# fixed ip at /etc/netplan/<network_file>
+  ethernets:
+    <adapter>:
+      dhcp4: no
+      addresses:
+        - 192.168.0.10/24
+
+# utils cmds
+journalctl -u dnsmasq -f 
+journalctl -xe -f | grep -i "nfs"
+systemctl stop dnsmasq.service 
+systemctl start dnsmasq.service 
